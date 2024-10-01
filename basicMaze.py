@@ -1,6 +1,9 @@
 import numpy as np
 import matplotlib as mpl
 
+from actionValue import ActionValue as av  # Import the ActionValue class as 'av'
+
+
 # Create simple maze layout where 1 represents a wall and 0 represents a path, 
 # 2 represents the start, 8 represents the sub-goal, and 9 represents the end goal
 
@@ -14,7 +17,14 @@ maze_layout = np.array(
     ]
 )
 
+print(maze_layout)
 
+# Initialize ActionValue with the maze layout
+action_value = av(maze_layout)
+
+av.pretty_print(action_value)
+
+# EVERYTHING BELOW THIS LINE IS IRRELEVANT FOR NOW
 
 def cumulative_reward(rewards, gamma=0.9):
     G_t = 0
@@ -48,32 +58,8 @@ def move_agent(state, action, maze):
         return (x, y)  # New state, no wall hit
     return state
 
-def getPossibleActions(state, maze_layout):
-    # Define possible actions for each state
-    actions = []
-    x, y = state
 
-    # Check if agent can move up (not out of bounds and the state above is not a wall)
-    if x - 1 >= 0 and maze_layout[x - 1][y] != 1:
-        actions.append("up")
-    
-    # Check if agent can move down (not out of bounds and the state below is not a wall)
-    if x + 1 < len(maze_layout) and maze_layout[x + 1][y] != 1:
-        actions.append("down")
-    
-    # Check if agent can move left (not out of bounds and the state to the left is not a wall)
-    if y - 1 >= 0 and maze_layout[x][y - 1] != 1:
-        actions.append("left")
-    
-    # Check if agent can move right (not out of bounds and the state to the right is not a wall)
-    if y + 1 < len(maze_layout[0]) and maze_layout[x][y + 1] != 1:
-        actions.append("right")
-    
-    return actions
-
-
-
-def runMazeSim(maze_layout):
+def runMazeSim(maze_layout): 
     state = (1, 1)  # Start position
     path = [state]
     rewards = [getReward(maze_layout[state])]
@@ -94,5 +80,3 @@ def runMazeSim(maze_layout):
     print(f"cummalitive reward: {cumulative_reward(rewards)}")
     print("END FOUND")
 
-print(maze_layout)
-runMazeSim(maze_layout)
