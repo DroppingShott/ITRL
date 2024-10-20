@@ -1,11 +1,11 @@
-import numpy as np
-import matplotlib as mpl
 import sys
 
-# Import the necessary classes
-from actionValue import ActionValue as av 
-from mazeSimulation import runMazeSim
+import matplotlib as mpl
+import numpy as np
 
+# Import the necessary classes
+from actionValue import ActionValue as av
+from mazeSimulation import runMazeSim
 
 # maze_layout = np.array(
 #     [
@@ -17,7 +17,7 @@ from mazeSimulation import runMazeSim
 #     ]
 # )
 
-# Create simple maze layout where 1 represents a wall and 0 represents a path, 
+# Create simple maze layout where 1 represents a wall and 0 represents a path,
 # 2 represents the start, 8 represents the sub-goal, and 9 represents the end goal
 maze_layout = np.array(
     [

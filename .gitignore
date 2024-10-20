@@ -1,0 +1,8 @@
+venv
+
+maze_env/build
+maze_env/maze_env.egg-info
+
+ __pycache__/*
+
+*.pyc

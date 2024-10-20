@@ -1,10 +1,13 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch
-from actionValue import ActionValue as av  # Your action value class
-from epsilonGreedy import epsilon_greedy_action as ega  # Your epsilon greedy action selection
-from mazeSimulation import runMazeSim
+
+from old_implementation.actionValue import ActionValue as av  # Your action value class
+from old_implementation.epsilonGreedy import (
+    epsilon_greedy_action as ega,
+)  # Your epsilon greedy action selection
+from old_implementation.mazeSimulation import runMazeSim
 
 maze_layout = np.array(
     [
@@ -28,7 +31,10 @@ start_pos = (1, 1)
 sub_goal_pos = (5, 3)
 end_goal_pos = (8, 6)
 
-def plot_maze_with_q_values(maze_layout, optimal_Qtable, start_pos, sub_goal_pos, end_goal_pos):
+
+def plot_maze_with_q_values(
+    maze_layout, optimal_Qtable, start_pos, sub_goal_pos, end_goal_pos
+):
     maze_with_path = maze.copy().astype(float)
     maze_with_path[start_pos] = -0.5
     maze_with_path[sub_goal_pos] = 0.7
@@ -42,15 +48,25 @@ def plot_maze_with_q_values(maze_layout, optimal_Qtable, start_pos, sub_goal_pos
         linewidths=0.5,
         linecolor="black",
         annot=False,
-        ax=ax
+        ax=ax,
     )
 
     # Annotate Q-values for each state
     for state, actions in Qtable.items():
         x, y = state
         if maze[x, y] != 1:  # Non-wall states
-            q_value_str = "\n".join([f"{a[0].upper()}: {v:.1f}" for a, v in actions.items()])
-            ax.text(y + 0.5, x + 0.5, q_value_str, ha='center', va='center', fontsize=8, color='black')
+            q_value_str = "\n".join(
+                [f"{a[0].upper()}: {v:.1f}" for a, v in actions.items()]
+            )
+            ax.text(
+                y + 0.5,
+                x + 0.5,
+                q_value_str,
+                ha="center",
+                va="center",
+                fontsize=8,
+                color="black",
+            )
 
     plt.savefig("maze_with_q_values.png")
     plt.show()
@@ -59,5 +75,6 @@ def plot_maze_with_q_values(maze_layout, optimal_Qtable, start_pos, sub_goal_pos
 # Assuming AVclass has already run 10000  episodes and learned the optimal policy
 optimal_Qtable = AVclass.action_values  # This contains the Q-values for each state
 
-plot_maze_with_q_values(maze_layout, optimal_Qtable, start_pos, sub_goal_pos, end_goal_pos)
-
+plot_maze_with_q_values(
+    maze_layout, optimal_Qtable, start_pos, sub_goal_pos, end_goal_pos
+)
