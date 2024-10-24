@@ -28,6 +28,10 @@ class QLearningAgent:
         self.min_epsilon = min_epsilon
         self.q_table = np.zeros((env.size, env.size, env.action_space.n))
 
+        # Initialize lists for tracking training performance
+        self.steps_per_episode = []
+        self.rewards_per_episode = []
+
     def choose_action(self, state):
         """
         Epsilon-greedy action selection: choose a random action with probability epsilon
@@ -56,6 +60,8 @@ class QLearningAgent:
         for episode in range(num_episodes):
             state, _ = self.env.reset()
             done = False
+            steps = 0
+            total_reward = 0
 
             while not done:
                 action = self.choose_action(state)
@@ -64,6 +70,12 @@ class QLearningAgent:
                 self.update_q_value(state, action, reward, next_state)
 
                 state = next_state
+
+                total_reward += reward
+                steps += 1
+            # Track episode metrics
+            self.steps_per_episode.append(steps)
+            self.rewards_per_episode.append(total_reward)
 
             # Decay epsilon
             self.epsilon = max(self.min_epsilon, self.epsilon * self.epsilon_decay)
@@ -74,9 +86,7 @@ class QLearningAgent:
         print("Training complete!")
         return self.q_table
 
-    def play_game(
-        self, q_table=None, max_steps=10000, num_episodes=1, render=True
-    ) -> None:
+    def play_game(self, q_table=None, max_steps=10000, num_episodes=1, render=True):
         """
         Play the game after training, using the learned Q-table.
         """
@@ -86,6 +96,7 @@ class QLearningAgent:
         for episode in range(num_episodes):
             state, _ = self.env.reset()
             done = False
+            path = [state]
 
             print(f"EPISODE {episode + 1}")
             print("****************************************************")
@@ -102,6 +113,8 @@ class QLearningAgent:
                 if np.array_equal(next_state, self.env.sub_goal):
                     print(f"Agent reached the sub goal in {step + 1} steps!")
 
+                path.append(next_state)
+
                 if done:
                     if render:
                         self.env.render()
@@ -112,5 +125,10 @@ class QLearningAgent:
 
             if not done:
                 print(f"Agent did not reach the goal in {max_steps} steps.")
+            return path  # Return the path for visualization
 
         self.env.close()
+
+    # Helper functions to access performance data
+    def get_training_data(self):
+        return self.steps_per_episode, self.rewards_per_episode
